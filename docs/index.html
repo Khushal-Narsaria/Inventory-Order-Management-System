@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inventory &amp; Order Management System</title>
+<meta name="description" content="A warehouse and order management platform on ASP.NET Core 9 using Clean Architecture, CQRS and JWT role-based security.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f7f8fb; --surface:#fff; --border:#e3e8f0; --text:#0f1b2d; --text-2:#4a5567; --muted:#7a8699;
+  --accent:#4f46e5; --accent-2:#0ea5e9; --soft:color-mix(in srgb, var(--accent) 11%, transparent);
+  --shadow:0 1px 2px rgba(15,27,45,.04),0 8px 24px rgba(15,27,45,.06);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0a0f1a; --surface:#111827; --border:#1f2a3f; --text:#e8eef9; --text-2:#aab6ca; --muted:#7b889e;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#0a0f1a; --surface:#111827; --border:#1f2a3f; --text:#e8eef9; --text-2:#aab6ca; --muted:#7b889e;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); color-scheme: dark;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:Inter,system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; -webkit-font-smoothing:antialiased; }
+a { color:inherit; text-decoration:none; }
+.wrap { max-width:1040px; margin:0 auto; padding:0 24px; }
+.hero { background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#fff; padding:28px 0 64px; position:relative; overflow:hidden; }
+.hero::after { content:""; position:absolute; inset:0; opacity:.14; background-image:radial-gradient(#fff 1px,transparent 1px); background-size:18px 18px; pointer-events:none; }
+.top { display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1; font-size:14px; }
+.top a { display:inline-flex; gap:6px; align-items:center; opacity:.9; }
+.top a:hover { opacity:1; }
+.kind { font-family:"JetBrains Mono",monospace; font-size:12px; letter-spacing:.06em; margin-top:48px; opacity:.9; position:relative; z-index:1; }
+h1 { font-family:"Space Grotesk",sans-serif; font-size:clamp(34px,5.5vw,56px); line-height:1.05; letter-spacing:-.02em; margin:10px 0 14px; position:relative; z-index:1; }
+.sub { font-size:18px; max-width:680px; opacity:.95; position:relative; z-index:1; }
+.btns { display:flex; gap:10px; flex-wrap:wrap; margin-top:28px; position:relative; z-index:1; }
+.btn { display:inline-flex; gap:8px; align-items:center; padding:11px 18px; border-radius:10px; font-weight:600; font-size:14px; background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.35); color:#fff; transition:transform .15s; }
+.btn.primary { background:#fff; color:#0f1b2d; border-color:#fff; }
+.btn:hover { transform:translateY(-2px); }
+.metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:-36px; position:relative; z-index:2; }
+.metric { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px 20px; box-shadow:var(--shadow); }
+.metric b { display:block; font-family:"Space Grotesk",sans-serif; font-size:28px; letter-spacing:-.02em; }
+.metric span { font-size:13px; color:var(--muted); }
+section { margin-top:64px; }
+h2 { font-family:"Space Grotesk",sans-serif; font-size:28px; letter-spacing:-.01em; margin-bottom:20px; }
+.overview { display:grid; grid-template-columns:1.3fr 1fr; gap:28px; }
+.overview p { color:var(--text-2); font-size:16.5px; margin-bottom:14px; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:22px 24px; box-shadow:var(--shadow); }
+.card h3 { font-size:13px; font-family:"JetBrains Mono",monospace; color:var(--accent); text-transform:uppercase; letter-spacing:.06em; margin-bottom:12px; }
+.card ul { list-style:none; display:grid; gap:8px; }
+.card li { padding-left:20px; position:relative; color:var(--text-2); font-size:15px; }
+.card li::before { content:"▹"; position:absolute; left:0; color:var(--accent); }
+.steps { list-style:none; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+.steps li { display:flex; gap:14px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; box-shadow:var(--shadow); }
+.steps .n { font-family:"JetBrains Mono",monospace; color:var(--accent); font-size:13px; padding-top:3px; }
+.steps h3 { font-size:16px; margin-bottom:4px; }
+.steps p { font-size:14px; color:var(--text-2); }
+.gallery { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+figure { background:var(--surface); border:1px solid var(--border); border-radius:14px; overflow:hidden; box-shadow:var(--shadow); }
+figure.wide { grid-column:1/-1; }
+figure img { width:100%; display:block; background:#fff; }
+figcaption { padding:10px 14px; font-size:13.5px; color:var(--muted); border-top:1px solid var(--border); }
+.chips { display:flex; flex-wrap:wrap; gap:8px; }
+.chip { font-size:13.5px; padding:6px 12px; border-radius:8px; background:var(--soft); color:var(--accent); font-weight:500; }
+.note { margin-top:18px; font-size:14px; color:var(--muted); background:var(--surface); border:1px dashed var(--border); border-radius:12px; padding:14px 16px; }
+.note code { font-family:"JetBrains Mono",monospace; font-size:12.5px; }
+.arch { display:grid; gap:10px; }
+.layer { border-radius:12px; padding:14px 18px; border:1px solid var(--border); background:var(--surface); box-shadow:var(--shadow); }
+.layer b { font-family:"Space Grotesk",sans-serif; }
+.layer span { display:block; color:var(--text-2); font-size:14px; }
+.layer:nth-child(1) { border-left:4px solid var(--accent); }
+.layer:nth-child(2) { border-left:4px solid color-mix(in srgb,var(--accent) 70%,var(--accent-2)); }
+.layer:nth-child(3) { border-left:4px solid color-mix(in srgb,var(--accent) 35%,var(--accent-2)); }
+.layer:nth-child(4) { border-left:4px solid var(--accent-2); }
+footer { margin:72px 0 40px; text-align:center; color:var(--muted); font-size:13px; font-family:"JetBrains Mono",monospace; }
+@media (max-width:760px) {
+  .metrics { grid-template-columns:repeat(2,1fr); }
+  .overview, .gallery { grid-template-columns:1fr; }
+}
+@media (max-width:480px) { .wrap { padding:0 16px; } .metric b { font-size:22px; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="top">
+      <a href="https://khushal-narsaria.github.io/"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5m6-6-6 6 6 6"/></svg>Khushal Narsaria</a>
+      <a href="https://github.com/Khushal-Narsaria/Inventory-Order-Management-System" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.2-3.1-.1-.4-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.8.1 3.2.8.8 1.2 1.9 1.2 3.1 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>Source</a>
+    </div>
+    <p class="kind">FULL-STACK · .NET</p>
+    <h1>Inventory &amp; Order Management System</h1>
+    <p class="sub">A warehouse and order management platform on ASP.NET Core 9 using Clean Architecture, CQRS and JWT role-based security.</p>
+    <div class="btns"><a class="btn primary" href="https://github.com/Khushal-Narsaria/Inventory-Order-Management-System" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.2-3.1-.1-.4-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.7.2 2.8.1 3.2.8.8 1.2 1.9 1.2 3.1 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>View source code</a></div>
+  </div>
+</header>
+<main class="wrap">
+  <div class="metrics"><div class="metric"><b>.NET 9</b><span>ASP.NET Core Web API</span></div><div class="metric"><b>CQRS</b><span>with MediatR</span></div><div class="metric"><b>3</b><span>business modules</span></div><div class="metric"><b>JWT</b><span>role-based access</span></div></div>
+  <section>
+    <h2>Overview</h2>
+    <div class="overview">
+      <div><p>A headless ASP.NET Core 9 API with a Vue.js + Razor Pages front end that runs a warehouse end to end: sales, purchasing, and stock movements, with reporting.</p><p>The back end follows Clean Architecture with CQRS (MediatR) and the Repository pattern. EF Core runs on SQL Server, requests are validated with FluentValidation, logs go through Serilog, and ASP.NET Identity + JWT handles authentication.</p></div>
+      <div class="card"><h3>Highlights</h3><ul><li>Sales: orders, returns, delivery orders and sales reports</li><li>Purchase: orders, returns and goods receipt</li><li>Warehouse: transfers, adjustments, scrapping and stock counts</li><li>Transaction, stock and movement reports</li></ul></div>
+    </div>
+  </section>
+  <section><h2>Request flow</h2><ol class="steps"><li><span class="n">01</span><div><h3>UI</h3><p>Razor Pages + Vue.js call the API with Axios.</p></div></li><li><span class="n">02</span><div><h3>API controller</h3><p>JWT-authenticated endpoint dispatches a MediatR command or query.</p></div></li><li><span class="n">03</span><div><h3>Handler</h3><p>FluentValidation runs, then the handler applies business rules through repositories.</p></div></li><li><span class="n">04</span><div><h3>Persistence</h3><p>EF Core writes to SQL Server; Serilog records the request.</p></div></li></ol></section>
+  <section><h2>Clean Architecture</h2><div class="arch">
+<div class="layer"><b>Presentation</b><span>ASP.NET Core Web API controllers · Razor Pages · Vue.js · Syncfusion UI · AdminLTE</span></div>
+<div class="layer"><b>Application</b><span>CQRS commands & queries (MediatR) · FluentValidation · AutoMapper · use-case handlers</span></div>
+<div class="layer"><b>Domain</b><span>Entities & business rules: products, warehouses, orders, stock movements</span></div>
+<div class="layer"><b>Infrastructure</b><span>EF Core + SQL Server · Repository pattern · ASP.NET Identity + JWT · Serilog · file storage</span></div>
+</div></section>
+  
+  <section><h2>Tech stack</h2><div class="chips"><span class="chip">ASP.NET Core 9</span><span class="chip">C#</span><span class="chip">EF Core</span><span class="chip">SQL Server</span><span class="chip">MediatR / CQRS</span><span class="chip">FluentValidation</span><span class="chip">Serilog</span><span class="chip">ASP.NET Identity + JWT</span><span class="chip">Vue.js</span><span class="chip">Razor Pages</span></div><p class="note">Running it needs .NET 9 and SQL Server: set the connection string in <code>Presentation/ASPNET/appsettings.json</code> and run the ASPNET project. The database is created automatically on first run.</p></section>
+</main>
+<footer>Khushal Narsaria · <a href="https://github.com/Khushal-Narsaria/Inventory-Order-Management-System">source on GitHub</a></footer>
+</body>
+</html>
