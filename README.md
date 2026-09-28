@@ -1,3 +1,8 @@
+<!-- live-links -->
+> 🔗 **Live project page:** [khushal-narsaria.github.io/Inventory-Order-Management-System](https://khushal-narsaria.github.io/Inventory-Order-Management-System/)  
+> 👤 **Portfolio:** [khushal-narsaria.github.io](https://khushal-narsaria.github.io/)  
+<!-- live-links -->
+
 ![indotalent-whms](https://cdn.shopify.com/s/files/1/0097/8422/9945/files/product_hunt_inventory_wms_2.png?v=1738303996)
 <a href="https://www.producthunt.com/posts/indotalent-wms?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-indotalent&#0045;wms" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=836427&theme=light&t=1738304283591" alt="INDOTALENT&#0032;WMS - Free&#0032;and&#0032;open&#0045;source&#0032;powerful&#0032;inventory&#0032;management&#0032;system | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 # 🔥 Introduction  
