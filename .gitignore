@@ -1,2 +1,8 @@
 ﻿.vs/
 obj/
+
+# build output and local SQLite database
+bin/
+*.db
+*.db-shm
+*.db-wal

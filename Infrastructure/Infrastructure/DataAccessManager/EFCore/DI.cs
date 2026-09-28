@@ -42,6 +42,25 @@ public static class DI
             //    );
             //    break;
 
+            // SQLite: zero-install local database (DatabaseProvider=Sqlite, DefaultConnection="Data Source=whms.db").
+            case "Sqlite":
+                services.AddDbContext<DataContext>(options =>
+                    options.UseSqlite(connectionString)
+                    .LogTo(Log.Information, LogLevel.Information)
+                    .EnableSensitiveDataLogging()
+                );
+                services.AddDbContext<CommandContext>(options =>
+                    options.UseSqlite(connectionString)
+                    .LogTo(Log.Information, LogLevel.Information)
+                    .EnableSensitiveDataLogging()
+                );
+                services.AddDbContext<QueryContext>(options =>
+                    options.UseSqlite(connectionString)
+                    .LogTo(Log.Information, LogLevel.Information)
+                    .EnableSensitiveDataLogging()
+                );
+                break;
+
             case "SqlServer":
             default:
                 services.AddDbContext<DataContext>(options =>

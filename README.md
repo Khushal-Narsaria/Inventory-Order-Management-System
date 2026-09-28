@@ -1,172 +1,96 @@
+# Inventory & Order Management System (WMS)
+
+[![Build](https://github.com/Khushal-Narsaria/Inventory-Order-Management-System/actions/workflows/build.yml/badge.svg)](https://github.com/Khushal-Narsaria/Inventory-Order-Management-System/actions/workflows/build.yml)
+[![Project page](https://img.shields.io/badge/project_page-live-22c55e)](https://khushal-narsaria.github.io/Inventory-Order-Management-System/)
+![.NET 9](https://img.shields.io/badge/.NET-9.0-512bd4?logo=dotnet&logoColor=white)
+![EF Core](https://img.shields.io/badge/EF_Core-SQL_Server_%7C_SQLite-512bd4)
+![Vue.js](https://img.shields.io/badge/Vue.js-3-4fc08d?logo=vuedotjs&logoColor=white)
+[![License: CC BY 4.0](https://img.shields.io/badge/license-CC_BY_4.0-lightgrey)](LICENSE.txt)
+
 <!-- live-links -->
 > 🔗 **Live project page:** [khushal-narsaria.github.io/Inventory-Order-Management-System](https://khushal-narsaria.github.io/Inventory-Order-Management-System/)  
 > 👤 **Portfolio:** [khushal-narsaria.github.io](https://khushal-narsaria.github.io/)  
 <!-- live-links -->
 
-![indotalent-whms](https://cdn.shopify.com/s/files/1/0097/8422/9945/files/product_hunt_inventory_wms_2.png?v=1738303996)
-<a href="https://www.producthunt.com/posts/indotalent-wms?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-indotalent&#0045;wms" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=836427&theme=light&t=1738304283591" alt="INDOTALENT&#0032;WMS - Free&#0032;and&#0032;open&#0045;source&#0032;powerful&#0032;inventory&#0032;management&#0032;system | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
-# 🔥 Introduction  
-Welcome to our **Warehouse Inventory Management System (WHMS)**, an innovative and scalable solution meticulously crafted to streamline and optimize your inventory operations.  
+A warehouse and order management system built on an **ASP.NET Core 9** headless API with **Clean Architecture**, **CQRS (MediatR)** and the **Repository pattern**. The Razor Pages + Vue.js front end covers the full inventory lifecycle: sales, purchasing, stock movements between warehouses, and reporting.
 
-Now powered by **ASP.NET Core 9.0**, the latest cutting-edge technology from Microsoft, WHMS is faster than ever and showcases the future of modern web development. With its fully decoupled **headless API** architecture, WHMS enables seamless integration between the back end and front end, offering unparalleled flexibility and performance.  
+![Dashboard](docs/screenshots/dashboard.png)
 
-The back end is built using **Clean Architecture**, **CQRS**, **MediatR**, and the **Repository Pattern**, ensuring maintainability and scalability for enterprise-grade applications. On the front end, **ASP.NET Core Razor Pages** and **Vue.js** come together to create a dynamic and user-friendly interface.  
+## Features
 
-## Key Features  
-WHMS provides a comprehensive suite of capabilities:  
-- **Sales, Purchase, Delivery, and Goods Receive**  
-- **Transfer, Adjustment, Return, and Scrapping**  
-- **Stock Count and Detailed Reporting Functionalities**  
+| Module | Capabilities |
+|---|---|
+| **Sales** | Customers (groups, categories, contacts), sales orders, sales returns, delivery orders, sales reports |
+| **Purchase** | Vendors (groups, categories, contacts), purchase orders, purchase returns, goods receipt, purchase reports |
+| **Inventory** | Warehouses, products and groups, units of measure, transfer out/in, positive/negative adjustments, scrapping, stock counts |
+| **Reports** | Stock report, movement report, transaction report, printable PDFs for every document |
+| **Platform** | ASP.NET Identity + JWT with role-based access, users and roles, company settings, taxes, number sequences, Excel export, error/analytics logs |
 
-🎯 **Challenge Yourself!**  
-Experience the blazing speed and efficiency of **.NET 9**, the latest breakthrough in performance from Microsoft. Explore our **live online demo** today and see firsthand how WHMS can revolutionize your inventory management operations.  
+## Screenshots
 
+| Sales orders | Purchase orders |
+|---|---|
+| ![Sales orders](docs/screenshots/sales-orders.png) | ![Purchase orders](docs/screenshots/purchase-orders.png) |
 
+| Products | Stock report |
+|---|---|
+| ![Products](docs/screenshots/products.png) | ![Stock report](docs/screenshots/stock-report.png) |
 
-# Monolithic Clean Architecture  
+| Movement report | Transfer out |
+|---|---|
+| ![Movement report](docs/screenshots/movement-report.png) | ![Transfer out](docs/screenshots/transfer-out.png) |
 
-WHMS is built using a **Monolithic Clean Architecture** approach, ensuring a structured and simplified development process. By keeping all components within a single codebase, dependency management is streamlined, eliminating the risk of a **dependency nightmare**. This approach consolidates all dependencies in one place, ensuring compatibility and coherence across the entire system.  
+## Architecture
 
-Additionally, it simplifies **deployment**, as all code resides in a single repository with a well-optimized pipeline, reducing complexity. The **cohesive project structure** provides a clear and consistent source code pattern, making it easier for developers to understand and maintain the system. With the combination of Clean Architecture, CQRS, and MediatR, WHMS delivers a **scalable, maintainable, and enterprise-ready solution**.
+```
+Presentation/ASPNET      Web API controllers + Razor Pages front end (Vue.js, Syncfusion grids, AdminLTE)
+        │  MediatR requests
+Core/Application         CQRS commands & queries, handlers, FluentValidation, AutoMapper profiles
+        │
+Core/Domain              Entities and business rules (products, warehouses, orders, stock movements)
+        │
+Infrastructure           EF Core contexts + repositories, ASP.NET Identity + JWT, Serilog, file storage, seeding
+```
 
+Each request flows **UI (Axios) → API controller → MediatR command/query → validation → handler → repository → EF Core**, with Serilog logging throughout.
 
+## Run locally
 
-# Technical Features
-- **ASP.NET Core 9.0 Headless API** (Back End)
-  - Clean Architecture
-  - CQRS with MediatR
-  - Repository Pattern
-  - Entity Framework Core (EF Core) for data access
-  - AutoMapper for object mapping
-  - FluentValidation for input validation
-  - Serilog for logging
-  - Support for file uploads and downloads (images/documents)
-  - Secure authentication and authorization with ASP.NET Identity + JWT
-- **ASP.NET Core Razor Pages with a Simple & Modern UI** (Front End)  
-  - **Effortless** dynamic interactivity using Vue.js **without any build system**  
-  - **Ready-to-use** industry-leading Syncfusion UI components (free community edition)  
-  - **Lightweight and straightforward** API communication with Axios  
-  - **Easy-to-customize** responsive UI powered by the AdminLTE template  
+Requirements: [.NET 9 SDK](https://dotnet.microsoft.com/download).
 
+**Quick start with SQLite (no database server needed):**
 
+```bash
+git clone https://github.com/Khushal-Narsaria/Inventory-Order-Management-System.git
+cd Inventory-Order-Management-System/Presentation/ASPNET
+DatabaseProvider=Sqlite ConnectionStrings__DefaultConnection="Data Source=whms.db" dotnet run
+```
 
+On Windows PowerShell, set the two variables with `$env:DatabaseProvider="Sqlite"` and `$env:ConnectionStrings__DefaultConnection="Data Source=whms.db"`.
 
-# Functional Features
-- **Customer Management**
-  - Customer Group, Category, Details, and Contacts
-- **Sales Management**
-  - Sales Order, Sales Return, Sales Reports
-- **Vendor Management**
-  - Vendor Group, Category, Details, and Contacts
-- **Purchase Management**
-  - Purchase Order, Purchase Return, Purchase Reports
-- **Warehouse Operations**
-  - Unit Measure, Product Group, Products
-  - Delivery Order, Goods Receive
-  - Transfers, Adjustments, Scrapping, Stock Counts
-- **Reporting**
-  - Transaction Report, Stock Report, Movement Report
-- **System Settings**
-  - Company Settings, Tax Configuration, User Management
-  - Number Sequence for systematic tracking
-- **Analytics and Logs**
-  - Error Logs, Analytic Logs
-- **Authentication & Membership**
-  - Secure user authentication and role-based access control
+Open http://localhost:5000 and sign in with the seeded admin: **admin@root.com / 123456**. On first start the database is created and filled with demo customers, vendors, products and a year of transactions (`IsDemoVersion` in `appsettings.json`).
 
+**With SQL Server:** set `DefaultConnection` in `Presentation/ASPNET/appsettings.json` to your server and run `dotnet run`. `DatabaseProvider` defaults to `SqlServer`.
 
+## Tech stack
 
-# Run The Project: Visual Studio  
+| Layer | Technologies |
+|---|---|
+| Back end | ASP.NET Core 9 Web API, MediatR (CQRS), FluentValidation, AutoMapper, Serilog, Swagger |
+| Data | Entity Framework Core 9 with SQL Server or SQLite, Repository + Unit of Work |
+| Security | ASP.NET Identity, JWT bearer tokens, role-based authorization |
+| Front end | Razor Pages, Vue.js (no build step), Axios, Syncfusion EJ2 grids and charts, AdminLTE |
+| CI | GitHub Actions: `dotnet build` on every push |
 
-Getting started is **easy**! Thanks to **Monolithic Clean Architecture**, everything is structured and streamlined. Plus, even though this project uses a **modern JavaScript framework like Vue.js**, it **does not require a build system**—just use Visual Studio to run and build effortlessly.  
+## Changes in this repository
 
-1. Open the project using Visual Studio.  
-2. Update the connection string in `appsettings.json` to match your SQL Server database.  
-3. Clean and build the solution:  
-   - Right-click the solution > Clean  
-   - Right-click the solution > Build  
-4. Run the project:  
-   - Click the green "play" button in the Visual Studio toolbar.  
+- Added a **SQLite** database provider (`DatabaseProvider=Sqlite`) so the app runs on macOS/Linux without SQL Server. Verified locally: schema creation, demo-data seeding, login and all modules.
+- Added a GitHub Actions build and this documentation.
 
-> **Note**: The database will be created automatically if it does not exist.  
+## Credits & license
 
+This project is based on **WHMS by [Indotalent](https://store.indotalent.com)** (warehouse and inventory management system, .NET 9), licensed under [Creative Commons Attribution 4.0](LICENSE.txt).
 
+## Author
 
-
-
-# Run The Project: IIS Web Server  
-
-Deployment is **easy**! Thanks to **Monolithic Clean Architecture**, both the front end and back end are in a single deployable unit, making the process straightforward.  
-
-For deployment to IIS:  
-
-1. **Publish the project**:  
-   - Right-click the project > Publish.  
-   - Choose a folder to output the files.  
-
-2. **Deploy to IIS**:  
-   - Copy the published files to your IIS directory.  
-   - Configure IIS to point to the folder and ensure database connectivity.  
-
-> For detailed instructions, refer to [Microsoft's official IIS deployment documentation](https://learn.microsoft.com/en-us/aspnet/core/tutorials/publish-to-iis).  
-
-
-
-
-# Live Demo Link
-- **URL**: [https://whms-lte-fs.csharpasp.net/](https://whms-lte-fs.csharpasp.net/)
-- ✅ **Username**: admin@root.com  
-- ✅ **Password**: 123456  
-
-
-
-
-# Acknowledgments
-
-This project uses the following open-source and community resources:
-
-- [Syncfusion Community Edition](https://www.syncfusion.com/products/communitylicense) - For advanced UI components.  
-- [AdminLTE](https://github.com/ColorlibHQ/AdminLTE) - Licensed under the MIT License.  
-
-We thank these projects for their contributions to the developer community.
-
-
-
-# License
-
-This work is licensed under a [Creative Commons Attribution 4.0 International License (CC BY 4.0)](http://creativecommons.org/licenses/by/4.0/).  
-To view a copy of this license, visit [http://creativecommons.org/licenses/by/4.0/](http://creativecommons.org/licenses/by/4.0/).
-
-Users are required to retain the footer link in all instances of this software as part of the attribution requirement under CC BY 4.0.
-
-
-
-# Starred  
-If you find this project useful, please consider supporting us by giving a star on GitHub! ⭐  
-Your support keeps us motivated and helps us continue developing and improving this project to deliver even greater value to the community.  
-
-
-# 🌱 Help Us Grow!  
-Please help us grow by sharing it with your friends, family, and colleagues!  
-Every share helps us reach more people, grow the community, and continue improving this open-source project. ❤️  
- 
-
-
-# One Last Kiss ❤️  
-
-Thanks for stopping by and reading this far! This project is supported by **INDOTALENT**
-
-🌐 Feel free to visit: [https://store.indotalent.com](https://store.indotalent.com)  
-
-[![store-indotalent](https://cdn.shopify.com/s/files/1/0097/8422/9945/files/store-indotalent-hero.png?v=1737235553)](https://store.indotalent.com)
-### ✅ **How does Mini CRM help SMBs manage operations, drive growth, and streamline payroll?**
-[![powerfull-mini-crm](https://cdn.shopify.com/s/files/1/0097/8422/9945/files/powerfull-mini-crm-for-smb.png?v=1737992595)](https://store.indotalent.com)
-[![katenjo-crm-saas](https://store.indotalent.com/cdn/shop/files/hero1_f05d44f6-1298-4d0c-a46d-05395a7731d1_1024x1024@2x.png?v=1737932377)](https://store.indotalent.com/collections/featured-product/products/katenjo-crm-full-stack-edition-saas-multi-tenant)
-[![customer relationship management software](https://store.indotalent.com/cdn/shop/files/hero-crm-platinum-customer-relationship-management3_b5af66b6-3af1-41a0-a90e-e39c6d05ac67_1024x1024@2x.jpg?v=1739085851)](https://store.indotalent.com/)
-[![customer relationship management software Blazor](https://store.indotalent.com/cdn/shop/files/hero01_1024x1024@2x.png?v=1758478421)](https://store.indotalent.com/)
-
-
-
-
-
-
+**Khushal Narsaria** · [Portfolio](https://khushal-narsaria.github.io/) · [LinkedIn](https://www.linkedin.com/in/khushal-narsaria/) · [GitHub](https://github.com/Khushal-Narsaria)
